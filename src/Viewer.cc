@@ -31,11 +31,14 @@
 
 
 
-
+#include<unistd.h>
 #include "Viewer.h"
 #include <pangolin/pangolin.h>
 
 #include <mutex>
+
+std::string outputPicturePath = "/home/peijun/WorkStation/peijun_SLAM/IMG/img_";
+std::string outputPictureFormat = ".jpg";
 
 namespace ORB_SLAM2
 {
@@ -128,7 +131,8 @@ void Viewer::Run()
     //ui设置
     bool bFollow = true;
     bool bLocalizationMode = false;
-
+    //保存每帧
+    int i_begin=0;
     //更新绘制的内容
     while(1)
     {
@@ -189,6 +193,8 @@ void Viewer::Run()
         // step 4:绘制当前帧图像和特征点提取匹配结果
         cv::Mat im = mpFrameDrawer->DrawFrame();
         cv::imshow("ORB-SLAM2: Current Frame",im);
+        cv::imwrite(outputPicturePath + to_string(i_begin) + outputPictureFormat, im);
+        i_begin++;
         //NOTICE 注意对于我所遇到的问题,ORB-SLAM2是这样子来处理的
         cv::waitKey(mT);
 
