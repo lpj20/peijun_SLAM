@@ -31,7 +31,7 @@
 */
 
 
-
+#include<string>
 #include<iostream>
 #include<algorithm>
 #include<fstream>
@@ -56,9 +56,9 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
 
 int main(int argc, char **argv)
 {
-    if(argc != 5)
+    if(argc != 6)
     {
-        cerr << endl << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association" << endl;
+        cerr << endl << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association path_to_segmentation_result" << endl;
         return 1;
     }
 
@@ -103,6 +103,33 @@ int main(int argc, char **argv)
     //对图像序列中的每张图像展开遍历
     for(int ni=0; ni<nImages; ni++)
     {
+        //Read Segmentation Files
+        string strPathToDetectionResult = argv[5] + std::to_string(vTimestamps[ni]) + ".txt";
+        
+        //LoadSegmentationResult(strPathToDetectionResult, detect_result);
+        
+        cout<< ni << endl;
+        cout<< "-----------------------"<< endl;
+        cout<< strPathToDetectionResult << endl;
+        
+        int detectResult[480][640];
+
+
+        ifstream infile;
+        infile.open(strPathToDetectionResult);
+        if(!infile)
+        {
+            cout << "Load Semantic Segmentation File Fail" << endl;
+        }
+
+        for(int ii=0;ii<480;ii++)
+            for(int jj=0;jj<640;jj++)
+                infile >> detectResult[ii][jj];
+
+        cout<<detectResult[0][7]<<endl;
+        infile.close();
+
+
         //! 读取图像
         // Read image and depthmap from file
         imRGB = cv::imread(string(argv[3])+"/"+vstrImageFilenamesRGB[ni],CV_LOAD_IMAGE_UNCHANGED);

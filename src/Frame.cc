@@ -254,22 +254,23 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
     if(mvKeys.empty())
         return;
 
-    cout << "------------xxx-----------" <<endl;
+    //cout << "------------xxx-----------" <<endl;
     //TODO在特征点5*5的像素块内
     for (int k=0;k<mvKeys.size();k++){
 	    cv::KeyPoint &kp = mvKeys[k];
 	    //显示特征点坐标
         float kp_u = kp.pt.x;
 	    float kp_v = kp.pt.y;
-        cout << "kp_u:" <<kp_u <<"------------------"<<"kp_v:" << kp_v <<endl;
-	/*
-	if(){
-		mvKeys[k]=cv::KeyPoint(-1,-1,-1);
+        //cout << "aaa" << kp_v <<endl;
+        //cout << "kp_u:" <<kp_u <<"------------------"<<"kp_v:" << kp_v <<endl;
+	    /*
+	    if(X(kp_u,kp_v)=人)){
+		    mvKeys[k]=cv::KeyPoint(-1,-1,-1);
 	
-	}
-	*/
+	    }
+	    */
 }
-    cout << "------------xxx-----------" <<endl;
+
 
 
 	// Step 4 用OpenCV的矫正函数、内参对提取到的特征点进行矫正
@@ -1121,6 +1122,8 @@ void Frame::ComputeStereoFromRGBD(const cv::Mat &imDepth)	//参数是深度图�
         const float &u = kp.pt.x;
 		//从深度图像中获取这个特征点对应的深度点
         //NOTE 从这里看对深度图像进行去畸变处理是没有必要的,我们依旧可以直接通过未矫正的特征点的坐标来直接拿到深度数据
+        
+        if(u<0 || v <0) continue;
         const float d = imDepth.at<float>(v,u);
 
 		//
