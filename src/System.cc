@@ -233,7 +233,7 @@ cv::Mat System::TrackStereo(const cv::Mat &imLeft, 		//左侧图像
 }
 
 //当输入图像 为RGBD时进行的追踪，参数就不在一一说明了
-cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const double &timestamp)
+cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const double &timestamp, const int (&detect_result)[480][640])
 {
 	//判断输入数据类型是否合法
     if(mSensor!=RGBD)
@@ -279,7 +279,7 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     }
 
     //获得相机位姿的估计
-    cv::Mat Tcw = mpTracker->GrabImageRGBD(im,depthmap,timestamp);
+    cv::Mat Tcw = mpTracker->GrabImageRGBD(im,depthmap,timestamp,detect_result);
 
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;

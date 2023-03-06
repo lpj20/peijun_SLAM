@@ -33,7 +33,7 @@
 #include "Converter.h"
 #include "ORBmatcher.h"
 #include <thread>
-
+#include<math.h>
 namespace ORB_SLAM2
 {
 
@@ -218,7 +218,7 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
  * @param[in] bf            baseline*bf
  * @param[in] thDepth       远点和近点的深度区分阈值
  */
-Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth)
+Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, const int (&detect_result)[480][640])
     :mpORBvocabulary(voc),mpORBextractorLeft(extractor),mpORBextractorRight(static_cast<ORBextractor*>(NULL)),
      mTimeStamp(timeStamp), mK(K.clone()),mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth)
 {
@@ -246,7 +246,8 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
     // ORB extraction
 	// Step 3 对图像进行提取特征点, 第一个参数0-左图， 1-右图
     ExtractORB(0,imGray);
-
+    //cout << "-------------Frame-----------" << endl;
+    //cout << detect_result[0][1] <<endl;
 	//获取特征点的个数
     N = mvKeys.size();
 
@@ -254,23 +255,29 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
     if(mvKeys.empty())
         return;
 
-    //cout << "------------xxx-----------" <<endl;
     //TODO在特征点5*5的像素块内
     for (int k=0;k<mvKeys.size();k++){
 	    cv::KeyPoint &kp = mvKeys[k];
 	    //显示特征点坐标
         float kp_u = kp.pt.x;
 	    float kp_v = kp.pt.y;
-        //cout << "aaa" << kp_v <<endl;
+        int round_kp_u = round(kp_u);
+        int round_kp_v = round(kp_v);
+        // Different Value
+        int round_kp_u_left = round_kp_u -5;
+        int round_kp_u_right = round_kp_u + 5;
+        int round_kp_v_top =  round_kp_v -5;
+        int round_kp_v_bottom =  round_kp_v +5;
+        //cout <<k << "--------------------" << detect_result[round_kp_v][round_kp_u] <<endl;
         //cout << "kp_u:" <<kp_u <<"------------------"<<"kp_v:" << kp_v <<endl;
-	    /*
-	    if(X(kp_u,kp_v)=人)){
-		    mvKeys[k]=cv::KeyPoint(-1,-1,-1);
-	
-	    }
-	    */
+        //cout << "round_kp_u:" <<round_kp_u <<"------------------"<<"round_kp_v:" << round_kp_v <<endl;
+        //cout << "TOP:" <<round_kp_v_top <<"---"<<"BOTTOM:" << round_kp_v_bottom <<"---"<<"LEFT:" << round_kp_u_left  <<"---"<<"RIGHT:" << round_kp_u_right <<endl;
+	    for(int detect_y = round_kp_v_top; detect_y<round_kp_v_bottom+1; detect_y++)
+            for(int detect_x = round_kp_u_left; detect_x<round_kp_u_right+1; detect_x++ )
+                //cout << detect_result[detect_x][detect_y] << endl;
+                if(detect_result[detect_y][detect_x] ==125)
+                    mvKeys[k]=cv::KeyPoint(-1,-1,-1);
 }
-
 
 
 	// Step 4 用OpenCV的矫正函数、内参对提取到的特征点进行矫正
@@ -1123,7 +1130,8 @@ void Frame::ComputeStereoFromRGBD(const cv::Mat &imDepth)	//参数是深度图�
 		//从深度图像中获取这个特征点对应的深度点
         //NOTE 从这里看对深度图像进行去畸变处理是没有必要的,我们依旧可以直接通过未矫正的特征点的坐标来直接拿到深度数据
         
-        if(u<0 || v <0) continue;
+        if(v<0 || u<0) 
+            continue;
         const float d = imDepth.at<float>(v,u);
 
 		//

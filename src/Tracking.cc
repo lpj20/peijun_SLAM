@@ -302,7 +302,7 @@ cv::Mat Tracking::GrabImageStereo(
 cv::Mat Tracking::GrabImageRGBD(
     const cv::Mat &imRGB,           //彩色图像
     const cv::Mat &imD,             //深度图像
-    const double &timestamp)        //时间戳
+    const double &timestamp, const int (&detect_result)[480][640])        //时间戳
 {
     mImGray = imRGB;
     cv::Mat imDepth = imD;
@@ -340,7 +340,8 @@ cv::Mat Tracking::GrabImageRGBD(
         mK,                     //相机内参矩阵
         mDistCoef,              //相机的去畸变参数
         mbf,                    //相机基线*相机焦距
-        mThDepth);              //内外点区分深度阈值
+        mThDepth,
+        detect_result);              //内外点区分深度阈值
 
     // 步骤4：跟踪
     Track();

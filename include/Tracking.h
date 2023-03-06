@@ -104,7 +104,7 @@ public:
      * @param[in] timestamp     时间戳
      * @return cv::Mat          世界坐标系到该帧相机坐标系的变换矩阵
      */
-    cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp);
+    cv::Mat GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp, const int (&detect_result)[480][640]);
 
     /**
      * @brief 处理单目输入图像

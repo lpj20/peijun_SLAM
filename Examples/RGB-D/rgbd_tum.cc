@@ -53,6 +53,9 @@ using namespace std;
  */
 void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageFilenamesRGB,
                 vector<string> &vstrImageFilenamesD, vector<double> &vTimestamps);
+// int detect_result[480][640]
+// 可以使用向量建立二维数组   https://www.jb51.net/article/267057.htm
+void LoadSegmentationResult(const string &strPathToDetectionResult, int (&detect_result)[480][640]);
 
 int main(int argc, char **argv)
 {
@@ -100,35 +103,22 @@ int main(int argc, char **argv)
 
     // Main loop
     cv::Mat imRGB, imD;
+    int detect_result[480][640];
     //对图像序列中的每张图像展开遍历
     for(int ni=0; ni<nImages; ni++)
     {
         //Read Segmentation Files
         string strPathToDetectionResult = argv[5] + std::to_string(vTimestamps[ni]) + ".txt";
         
-        //LoadSegmentationResult(strPathToDetectionResult, detect_result);
+        LoadSegmentationResult(strPathToDetectionResult, detect_result);
         
-        cout<< ni << endl;
-        cout<< "-----------------------"<< endl;
-        cout<< strPathToDetectionResult << endl;
-        
-        int detectResult[480][640];
-
-
-        ifstream infile;
-        infile.open(strPathToDetectionResult);
-        if(!infile)
+        if((sizeof(detect_result)/sizeof(detect_result[0][0])) == 0)
         {
-            cout << "Load Semantic Segmentation File Fail" << endl;
+            cerr << endl << "Loading Segmentation Result is wrong" << endl;
+            return 1;
         }
-
-        for(int ii=0;ii<480;ii++)
-            for(int jj=0;jj<640;jj++)
-                infile >> detectResult[ii][jj];
-
-        cout<<detectResult[0][7]<<endl;
-        infile.close();
-
+        //else
+        //cout << detect_result[0][8] << endl;
 
         //! 读取图像
         // Read image and depthmap from file
@@ -153,7 +143,9 @@ int main(int argc, char **argv)
     
         // Pass the image to the SLAM system
         //! 追踪
-        SLAM.TrackRGBD(imRGB,imD,tframe);
+        //////////////////////////////////////NEXT STEP/////////////////////////////////////////////////////////////////////////////////////////////
+        SLAM.TrackRGBD(imRGB,imD,tframe,detect_result);
+        //SLAM.TrackRGBD(imRGB,imD,tframe);
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
@@ -237,4 +229,27 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
 
         }
     }
+}
+
+
+
+// int& detect_result[480][640]
+void LoadSegmentationResult(const string &strPathToDetectionResult, int (&detect_result)[480][640])
+{
+    ifstream infile;
+    infile.open(strPathToDetectionResult);
+    if(!infile)
+    {
+        cout << "Load Semantic Segmentation File Fail" << endl;
+    }
+
+    //int detect_result[480][640];
+    //auto start = std::chrono::steady_clock::now();
+    for(int ii=0;ii<480;ii++)
+        for(int jj=0;jj<640;jj++)
+            infile >> detect_result[ii][jj];
+    //auto end = std::chrono::steady_clock::now();
+    //std::cout<<" 时间间隔: "<<std::chrono::duration_cast<std::chrono::microseconds >(end - start).count()<<" μs"<<std::endl;
+    //cout<<detect_result[0][7]<<endl;
+    infile.close();
 }

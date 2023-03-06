@@ -121,7 +121,7 @@ public:
      * @param[in] bf            baseline*bf
      * @param[in] thDepth       远点和近点的深度区分阈值
      */
-    Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth);
+    Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, const int (&detect_result)[480][640]);
 
     /**
      * @brief 为单目相机准备的帧构造函数

@@ -92,7 +92,7 @@ public:
     // NOTE 而在这里对RGBD图像的说法则是“配准”
     cv::Mat TrackRGBD(const cv::Mat &im,                //彩色图像
                       const cv::Mat &depthmap,          //深度图像
-                      const double &timestamp);         //时间戳
+                      const double &timestamp, const int (&detect_result)[480][640]);         //时间戳
 
     // Proccess the given monocular frame
     // Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.
