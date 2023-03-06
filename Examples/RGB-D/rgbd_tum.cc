@@ -143,9 +143,7 @@ int main(int argc, char **argv)
     
         // Pass the image to the SLAM system
         //! 追踪
-        //////////////////////////////////////NEXT STEP/////////////////////////////////////////////////////////////////////////////////////////////
         SLAM.TrackRGBD(imRGB,imD,tframe,detect_result);
-        //SLAM.TrackRGBD(imRGB,imD,tframe);
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();

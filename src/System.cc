@@ -279,7 +279,7 @@ cv::Mat System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const doub
     }
 
     //获得相机位姿的估计
-    cv::Mat Tcw = mpTracker->GrabImageRGBD(im,depthmap,timestamp,detect_result);
+    cv::Mat Tcw = mpTracker->GrabImageRGBD(im,depthmap,timestamp, detect_result);
 
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;

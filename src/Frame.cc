@@ -277,7 +277,7 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
                 //cout << detect_result[detect_x][detect_y] << endl;
                 if(detect_result[detect_y][detect_x] ==125)
                     mvKeys[k]=cv::KeyPoint(-1,-1,-1);
-}
+    }
 
 
 	// Step 4 用OpenCV的矫正函数、内参对提取到的特征点进行矫正
