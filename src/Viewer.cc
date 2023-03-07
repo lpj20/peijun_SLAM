@@ -193,10 +193,10 @@ void Viewer::Run()
         // step 4:绘制当前帧图像和特征点提取匹配结果
         cv::Mat im = mpFrameDrawer->DrawFrame();
         cv::imshow("ORB-SLAM2: Current Frame",im);
-        cv::imwrite(outputPicturePath + to_string(i_begin) + outputPictureFormat, im);
-        i_begin++;
         //NOTICE 注意对于我所遇到的问题,ORB-SLAM2是这样子来处理的
         cv::waitKey(mT);
+        cv::imwrite(outputPicturePath + to_string(i_begin) + outputPictureFormat, im);
+        i_begin++;
 
         // step 5 相应其他请求
         //复位按钮
