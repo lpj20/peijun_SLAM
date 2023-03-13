@@ -306,14 +306,14 @@ cv::Mat Tracking::GrabImageRGBD(
 {
     mImGray = imRGB;
     cv::Mat imDepth = imD;
-
     // step 1：将RGB或RGBA图像转为灰度图像
     if(mImGray.channels()==3)
     {
         if(mbRGB)
+            //Execuate This
             cvtColor(mImGray,mImGray,CV_RGB2GRAY);
         else
-            cvtColor(mImGray,mImGray,CV_BGR2GRAY);
+           cvtColor(mImGray,mImGray,CV_BGR2GRAY);
     }
     else if(mImGray.channels()==4)
     {
@@ -342,7 +342,6 @@ cv::Mat Tracking::GrabImageRGBD(
         mbf,                    //相机基线*相机焦距
         mThDepth,
         detect_result);              //内外点区分深度阈值
-
     // 步骤4：跟踪
     Track();
 

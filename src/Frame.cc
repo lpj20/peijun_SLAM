@@ -264,10 +264,10 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
         int round_kp_u = round(kp_u);
         int round_kp_v = round(kp_v);
         // Different Value
-        int round_kp_u_left = round_kp_u -5;
+        int round_kp_u_left = round_kp_u - 5;
         int round_kp_u_right = round_kp_u + 5;
-        int round_kp_v_top =  round_kp_v -5;
-        int round_kp_v_bottom =  round_kp_v +5;
+        int round_kp_v_top =  round_kp_v - 5;
+        int round_kp_v_bottom =  round_kp_v + 5;
         //cout <<k << "--------------------" << detect_result[round_kp_v][round_kp_u] <<endl;
         //cout << "kp_u:" <<kp_u <<"------------------"<<"kp_v:" << kp_v <<endl;
         //cout << "round_kp_u:" <<round_kp_u <<"------------------"<<"round_kp_v:" << round_kp_v <<endl;

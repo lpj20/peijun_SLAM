@@ -52,7 +52,7 @@ FrameDrawer::FrameDrawer(Map* pMap):mpMap(pMap)
 
 // 准备需要显示的信息，包括图像、特征点、地图、跟踪状态
 cv::Mat FrameDrawer::DrawFrame()
-{
+{   
     cv::Mat im;
     vector<cv::KeyPoint> vIniKeys; // Initialization: KeyPoints in reference frame
     vector<int> vMatches; // Initialization: correspondeces with reference keypoints
@@ -68,10 +68,8 @@ cv::Mat FrameDrawer::DrawFrame()
         state=mState;
         if(mState==Tracking::SYSTEM_NOT_READY)
             mState=Tracking::NO_IMAGES_YET;
-
         //NOTICE 这里使用copyTo进行深拷贝是因为后面会把单通道灰度图像转为3通道图像
         mIm.copyTo(im);
-
         //没有初始化的时候
         if(mState==Tracking::NOT_INITIALIZED)
         {
@@ -93,10 +91,10 @@ cv::Mat FrameDrawer::DrawFrame()
             vCurrentKeys = mvCurrentKeys;
         }
     } // destroy scoped mutex -> release mutex
-
+    //im.channels() = 1
     if(im.channels()<3) //this should be always true
         cvtColor(im,im,CV_GRAY2BGR);
-
+        
     //Draw
     // step 2：绘制初始化轨迹连线，绘制特征点边框（特征点用小框圈住）
     // step 2.1：初始化时，当前帧的特征坐标与初始帧的特征点坐标连成线，形成轨迹
